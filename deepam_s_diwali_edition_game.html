@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepam's Diwali Edition - Whose Line?</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Rozha+One&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: radial-gradient(circle at top center, #2e1065, #0f172a, #020617);
+            min-height: 100vh;
+            color: #f8fafc;
+        }
+        .font-header {
+            font-family: 'Rozha One', serif;
+        }
+        .glass-card {
+            background: rgba(30, 27, 75, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0.8; }
+            50% { transform: translateY(-15px) rotate(5deg); opacity: 1; }
+            100% { transform: translateY(0px) rotate(0deg); opacity: 0.8; }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="relative flex flex-col justify-between overflow-x-hidden min-h-screen">
+
+    <!-- Floating Background Decorative Elements -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div class="absolute top-10 left-10 text-4xl animate-float opacity-40">🪔</div>
+        <div class="absolute top-24 right-12 text-3xl animate-float opacity-40" style="animation-delay: 1s;">✨</div>
+        <div class="absolute bottom-16 left-1/4 text-4xl animate-float opacity-30" style="animation-delay: 2s;">🌟</div>
+        <div class="absolute bottom-20 right-1/4 text-3xl animate-float opacity-40" style="animation-delay: 1.5s;">🪔</div>
+    </div>
+
+    <!-- Header Navigation Bar -->
+    <header class="relative z-10 max-w-4xl w-full mx-auto px-4 py-5 flex items-center justify-between">
+        <div onclick="showLanding()" class="cursor-pointer flex items-center space-x-2">
+            <span class="text-3xl">🪔</span>
+            <span class="font-header text-amber-300 text-xl sm:text-2xl font-bold tracking-wide">Deepam's Diwali Edition</span>
+        </div>
+        <div class="flex items-center space-x-3">
+            <button onclick="toggleMusic()" id="music-btn" title="Toggle Diwali Music" class="bg-amber-950/80 hover:bg-amber-900 text-amber-200 px-4 py-2 rounded-xl text-xs sm:text-sm border border-amber-500/40 transition flex items-center space-x-2 backdrop-blur-md shadow-lg">
+                <i class="fa-solid fa-music text-amber-400"></i>
+                <span id="music-btn-text" class="font-semibold">Music: Off</span>
+            </button>
+            <button onclick="showDashboardScreen()" title="View Stats Dashboard" class="bg-amber-950/80 hover:bg-amber-900 text-amber-200 px-4 py-2 rounded-xl text-xs sm:text-sm border border-amber-500/40 transition flex items-center space-x-2 backdrop-blur-md shadow-lg">
+                <i class="fa-solid fa-chart-pie text-amber-400"></i>
+                <span class="font-semibold">Dashboard</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="relative z-10 max-w-2xl w-full mx-auto px-4 py-4 flex-grow flex flex-col justify-center">
+
+        <!-- Landing Screen -->
+        <section id="landing-screen" class="glass-card p-8 sm:p-10 rounded-3xl text-center space-y-6 shadow-2xl">
+            <div class="inline-block p-4 bg-amber-500/20 rounded-full border border-amber-500/40 animate-pulse">
+                <span class="text-5xl">✨</span>
+            </div>
+            <h1 class="font-header text-3xl sm:text-5xl text-amber-300 tracking-wide">Whose Line Is It Anyway?</h1>
+            <p class="text-amber-100/90 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
+                Read authentic family responses and guess who said it: <b>Mummy & Papa</b>, <b>Shubham & Akshita</b>, or <b>Cherry</b>!
+            </p>
+            <button onclick="startGame()" class="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-amber-950 font-black text-lg px-8 py-4 rounded-2xl shadow-xl hover:shadow-amber-500/25 transition transform hover:-translate-y-0.5">
+                Start Game 🪔
+            </button>
+        </section>
+
+        <!-- Active Game Screen -->
+        <section id="game-screen" class="hidden space-y-4">
+            <!-- LIVE SCOREBOARD CONTAINER -->
+            <div id="live-scoreboard" class="grid grid-cols-3 gap-3 p-4 rounded-2xl glass-card border border-amber-500/40 text-center shadow-lg">
+                <div class="bg-amber-950/60 p-2.5 rounded-xl border border-amber-500/20">
+                    <div class="text-[10px] sm:text-xs font-black uppercase text-amber-400 tracking-wider">Score</div>
+                    <div id="live-score-val" class="text-xl sm:text-2xl font-black text-amber-200">0</div>
+                </div>
+                <div class="bg-amber-950/60 p-2.5 rounded-xl border border-amber-500/20">
+                    <div class="text-[10px] sm:text-xs font-black uppercase text-amber-400 tracking-wider">Remaining</div>
+                    <div id="live-remaining-val" class="text-xl sm:text-2xl font-black text-amber-200">10</div>
+                </div>
+                <div class="bg-amber-950/60 p-2.5 rounded-xl border border-amber-500/20">
+                    <div class="text-[10px] sm:text-xs font-black uppercase text-amber-400 tracking-wider">Accuracy</div>
+                    <div id="live-accuracy-val" class="text-xl sm:text-2xl font-black text-amber-200">0%</div>
+                </div>
+            </div>
+
+            <div class="glass-card p-6 sm:p-8 rounded-3xl space-y-6 shadow-2xl">
+                <!-- Top Question Progress -->
+                <div class="flex items-center justify-between text-xs sm:text-sm font-bold text-amber-200 border-b border-amber-500/20 pb-4">
+                    <span id="question-number" class="bg-amber-500/20 text-amber-300 px-3.5 py-1.5 rounded-full border border-amber-500/40">Question 1 / 10</span>
+                </div>
+
+                <!-- Question Prompt -->
+                <h2 id="question-title" class="text-amber-200 font-bold text-lg sm:text-xl leading-snug">
+                    Question loading...
+                </h2>
+
+                <!-- Quote Box -->
+                <div class="relative bg-amber-950/40 border-l-4 border-amber-400 p-5 rounded-r-2xl italic text-amber-50 text-base sm:text-lg leading-relaxed shadow-inner">
+                    <span class="text-amber-400 font-serif text-3xl absolute top-1 left-2 opacity-30">“</span>
+                    <p id="quote-text" class="relative z-10 pl-3">Loading quote...</p>
+                </div>
+
+                <!-- Answer Choice Buttons -->
+                <div class="space-y-3 pt-2">
+                    <p class="text-xs font-bold uppercase text-amber-400 tracking-wider">Who gave this answer?</p>
+                    <div id="options-container" class="grid grid-cols-1 gap-3">
+                        <!-- Dynamic Player Buttons Inserted Here -->
+                    </div>
+                </div>
+
+                <!-- Feedback & Next Action -->
+                <div id="feedback-container" class="hidden p-4 rounded-2xl border text-center font-bold space-y-3">
+                    <div id="feedback-message" class="text-base sm:text-lg"></div>
+                    <button onclick="nextQuestion()" class="bg-amber-400 hover:bg-amber-300 text-amber-950 font-black px-6 py-2.5 rounded-xl text-sm transition shadow-md">
+                        Next Question →
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Dashboard Screen -->
+        <section id="dashboard-screen" class="hidden glass-card p-6 sm:p-8 rounded-3xl space-y-6 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-amber-500/20 pb-4">
+                <h2 class="font-header text-2xl sm:text-3xl text-amber-300">📊 Stats Dashboard</h2>
+                <button onclick="resumeGameOrLanding()" class="bg-amber-950/60 hover:bg-amber-900 text-amber-200 px-3 py-1.5 rounded-xl text-xs border border-amber-500/30">
+                    Close ✕
+                </button>
+            </div>
+
+            <!-- Stats Overview Cards -->
+            <div class="grid grid-cols-3 gap-3 text-center">
+                <div class="bg-amber-950/60 p-3 rounded-2xl border border-amber-500/30">
+                    <div class="text-xs text-amber-400 font-bold uppercase tracking-wider">Score</div>
+                    <div id="dash-score-val" class="text-2xl font-black text-amber-200">0 / 0</div>
+                </div>
+                <div class="bg-amber-950/60 p-3 rounded-2xl border border-amber-500/30">
+                    <div class="text-xs text-amber-400 font-bold uppercase tracking-wider">Accuracy</div>
+                    <div id="dash-accuracy-val" class="text-2xl font-black text-amber-200">0%</div>
+                </div>
+                <div class="bg-amber-950/60 p-3 rounded-2xl border border-amber-500/30">
+                    <div class="text-xs text-amber-400 font-bold uppercase tracking-wider">Answered</div>
+                    <div id="dash-answered-val" class="text-2xl font-black text-amber-200">0 / 10</div>
+                </div>
+            </div>
+
+            <!-- Accuracy Breakdown Per Player -->
+            <div class="space-y-3">
+                <h3 class="text-xs font-bold uppercase text-amber-400 tracking-wider">Performance By Respondent</h3>
+                <div id="player-accuracy-cards" class="grid grid-cols-1 gap-2.5">
+                    <!-- Dynamic accuracy bars per player -->
+                </div>
+            </div>
+
+            <!-- Answer Log History -->
+            <div class="space-y-3 text-left">
+                <h3 class="text-xs font-bold uppercase text-amber-400 tracking-wider">Question Log</h3>
+                <div id="dash-question-log" class="space-y-2 max-h-56 overflow-y-auto pr-1">
+                    <p class="text-xs text-amber-200/50 italic text-center py-4">No questions answered yet. Start playing!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final Results Screen -->
+        <section id="results-screen" class="hidden glass-card p-6 sm:p-8 rounded-3xl space-y-6 text-center shadow-2xl">
+            <div class="text-5xl">🏆</div>
+            <h2 class="font-header text-3xl text-amber-300">Quiz Completed!</h2>
+            
+            <div class="bg-amber-950/50 p-6 rounded-2xl border border-amber-500/30 space-y-2">
+                <div class="text-sm text-amber-300 font-bold">Your Total Score</div>
+                <div id="final-score" class="text-4xl font-black text-amber-200">0 / 10</div>
+                <div id="rank-title" class="text-sm font-semibold text-amber-400 pt-1">Diwali Champion</div>
+            </div>
+
+            <div class="space-y-3 text-left">
+                <h3 class="text-amber-300 font-bold text-sm uppercase tracking-wider">Answer Review</h3>
+                <div id="review-log" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+                    <!-- Reviewed Items Logged Here -->
+                </div>
+            </div>
+
+            <button onclick="startGame()" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-amber-950 font-black py-3.5 rounded-xl shadow-lg transition">
+                Play Again 🪔
+            </button>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 text-center py-4 text-xs text-amber-300/60">
+        Deepam's Diwali Edition • Family Game
+    </footer>
+
+    <!-- Game Engine Logic & Preset Dataset -->
+    <script>
+        const gameData = {
+            players: ["Mummy & Papa", "Shubham & Akshita", "Cherry"],
+            questions: [
+                {
+                    id: 1,
+                    question: "What is Deepam's all-time favorite movie?",
+                    targetPlayer: "Cherry",
+                    answers: [
+                        "He isn't big on Hindi movies—he definitely prefers English films.",
+                        "The Spider-Man movies (having just one single favorite movie should be illegal!).",
+                        "Interstellar."
+                    ]
+                },
+                {
+                    id: 2,
+                    question: "If Deepam became an overnight millionaire, what is the very first thing he would buy?",
+                    targetPlayer: "Mummy & Papa",
+                    answers: [
+                        "He never specifically talked about becoming a millionaire, but he used to mention that with his third paycheck, he wanted to buy a musical instrument (though the exact name escapes us!).",
+                        "Blue scrapbook paper and a blue pen to write on it with.",
+                        "First-class tickets for the whole family to visit the USA."
+                    ]
+                },
+                {
+                    id: 3,
+                    question: "What is your absolute favorite picture of him?",
+                    targetPlayer: "Shubham & Akshita",
+                    answers: [
+                        "There are so many! Mostly the ones from back when he didn't have a defined jawline.",
+                        "His pre-nursery school photo.",
+                        "His graduation pictures."
+                    ]
+                },
+                {
+                    id: 4,
+                    question: "If he could have any superpower in the world, what would he choose?",
+                    targetPlayer: "Cherry",
+                    answers: [
+                        "To make India less populated and less polluted.",
+                        "Maybe the ability to teleport anywhere (so he could pop over to India just for breakfast and then leave!).",
+                        "Probably throwing webs and swinging across the city like Spider-Man."
+                    ]
+                },
+                {
+                    id: 5,
+                    question: "If he had to switch careers overnight to something completely different, what job would he pick?",
+                    targetPlayer: "Shubham & Akshita",
+                    answers: [
+                        "He was once really fascinated by politicians—he wanted to be one, complete with bodyguards! But as he grew up, he always wanted to be an engineer.",
+                        "Cooking (or maybe a gamer?).",
+                        "He would be a chef."
+                    ]
+                },
+                {
+                    id: 6,
+                    question: "If Deepam had to give a TED talk on a random topic with zero preparation, what would he speak on with total confidence?",
+                    targetPlayer: "Shubham & Akshita",
+                    answers: [
+                        "Giving advice (gyaan) to us on eating healthy and exercising.",
+                        "Fitness, gaming, or general life hacks.",
+                        "Explaining F1 racing."
+                    ]
+                },
+                {
+                    id: 7,
+                    question: "What is the quality or character trait you admire most about him?",
+                    targetPlayer: "Mummy & Papa",
+                    answers: [
+                        "His desire to be independent, and the beautiful way he is learning and growing into it.",
+                        "His determination and resilience.",
+                        "His kindness."
+                    ]
+                },
+                {
+                    id: 8,
+                    question: "What is a moment when he made you feel extra proud of him?",
+                    targetPlayer: "Shubham & Akshita",
+                    answers: [
+                        "The mature and resilient way he is learning to handle whatever problems come his way.",
+                        "Seeing him handle big responsibilities independently.",
+                        "Every time he shows discipline and determination."
+                    ]
+                },
+                {
+                    id: 9,
+                    question: "What is a weird food combo he loves that everyone else thinks is weird?",
+                    targetPlayer: "Cherry",
+                    answers: [
+                        "Oh, there are so many! He can find a way to turn any simple, normal dish into a weird combination.",
+                        "I don't think he has a weird food choice, but he's totally the kind of guy who would order bhel puri at a 5-star restaurant!",
+                        "Mashed/smushy bananas in milk."
+                    ]
+                },
+                {
+                    id: 10,
+                    question: "What minor pet peeve or tiny inconvenience makes him super annoyed for no reason?",
+                    targetPlayer: "Mummy & Papa",
+                    answers: [
+                        "When people lack basic civic sense (though usually, there's a valid reason for his annoyance!).",
+                        "Unnecessary noise or delay.",
+                        "Honestly, nothing phases him!"
+                    ]
+                }
+            ]
+        };
+
+        let quizQueue = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userAnswers = [];
+        let answeredCurrent = false;
+
+        // Sound synthesizer logic
+        let audioCtx = null;
+        let isMusicPlaying = false;
+        let musicTimer = null;
+        const notes = [293.66, 329.63, 369.99, 440.00, 493.88, 554.37, 587.33];
+
+        function toggleMusic() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+            }
+
+            if (isMusicPlaying) {
+                stopMusic();
+            } else {
+                startMusic();
+            }
+        }
+
+        function startMusic() {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            isMusicPlaying = true;
+            document.getElementById('music-btn-text').innerText = 'Music: On';
+            
+            let noteIndex = 0;
+            musicTimer = setInterval(() => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(notes[noteIndex % notes.length], audioCtx.currentTime);
+                
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start();
+                osc.stop(audioCtx.currentTime + 1.2);
+
+                noteIndex = Math.floor(Math.random() * notes.length);
+            }, 600);
+        }
+
+        function stopMusic() {
+            isMusicPlaying = false;
+            document.getElementById('music-btn-text').innerText = 'Music: Off';
+            if (musicTimer) clearInterval(musicTimer);
+        }
+
+        function showLanding() {
+            document.getElementById('landing-screen').classList.remove('hidden');
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('dashboard-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.add('hidden');
+        }
+
+        function startGame() {
+            score = 0;
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            buildQuizQueue();
+
+            document.getElementById('landing-screen').classList.add('hidden');
+            document.getElementById('dashboard-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+
+            renderQuestion();
+        }
+
+        function buildQuizQueue() {
+            quizQueue = [];
+            const presetTargets = [
+                "Cherry",            // Q1: Interstellar
+                "Mummy & Papa",      // Q2: Musical instrument
+                "Shubham & Akshita", // Q3: Pre-nursery school photo
+                "Cherry",            // Q4: Spider-Man web swinging
+                "Shubham & Akshita", // Q5: Cooking/gamer
+                "Shubham & Akshita", // Q6: Shubham & Akshita answer
+                "Mummy & Papa",      // Q7: Growing into independence
+                "Shubham & Akshita", // Q8: Handling big responsibilities
+                "Cherry",            // Q9: Smushy bananas in milk
+                "Mummy & Papa"       // Q10: Lack of civic sense
+            ];
+
+            gameData.questions.forEach((q, idx) => {
+                const targetPlayerName = presetTargets[idx] || "Mummy & Papa";
+                let targetPlayerIndex = gameData.players.indexOf(targetPlayerName);
+                if (targetPlayerIndex === -1) targetPlayerIndex = 0;
+
+                quizQueue.push({
+                    question: q.question,
+                    quote: q.answers[targetPlayerIndex],
+                    correctPlayer: gameData.players[targetPlayerIndex],
+                    correctIndex: targetPlayerIndex
+                });
+            });
+        }
+
+        function renderQuestion() {
+            answeredCurrent = false;
+            document.getElementById('feedback-container').classList.add('hidden');
+
+            const q = quizQueue[currentQuestionIndex];
+            document.getElementById('question-number').innerText = `Question ${currentQuestionIndex + 1} / ${quizQueue.length}`;
+            document.getElementById('question-title').innerText = q.question;
+            document.getElementById('quote-text').innerText = q.quote;
+
+            // Live scoreboard updates
+            document.getElementById('live-score-val').innerText = score;
+            document.getElementById('live-remaining-val').innerText = quizQueue.length - currentQuestionIndex;
+            const acc = currentQuestionIndex > 0 ? Math.round((score / currentQuestionIndex) * 100) : 0;
+            document.getElementById('live-accuracy-val').innerText = `${acc}%`;
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            gameData.players.forEach((player) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl bg-amber-950/40 hover:bg-amber-900/60 border border-amber-500/30 text-amber-100 font-semibold text-sm sm:text-base transition flex items-center justify-between group shadow-sm";
+                btn.innerHTML = `
+                    <span>${player}</span>
+                    <i class="fa-solid fa-chevron-right text-xs opacity-0 group-hover:opacity-100 transition text-amber-400"></i>
+                `;
+                btn.onclick = () => checkAnswer(player, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedPlayer, clickedBtn) {
+            if (answeredCurrent) return;
+            answeredCurrent = true;
+
+            const currentQ = quizQueue[currentQuestionIndex];
+            const isCorrect = selectedPlayer === currentQ.correctPlayer;
+
+            if (isCorrect) {
+                score++;
+                clickedBtn.classList.remove('bg-amber-950/40', 'border-amber-500/30');
+                clickedBtn.classList.add('bg-emerald-900/60', 'border-emerald-500', 'text-emerald-200');
+            } else {
+                clickedBtn.classList.remove('bg-amber-950/40', 'border-amber-500/30');
+                clickedBtn.classList.add('bg-rose-900/60', 'border-rose-500', 'text-rose-200');
+            }
+
+            userAnswers.push({
+                question: currentQ.question,
+                quote: currentQ.quote,
+                selectedPlayer,
+                correctPlayer: currentQ.correctPlayer,
+                isCorrect
+            });
+
+            const buttons = document.querySelectorAll('#options-container button');
+            buttons.forEach(btn => btn.style.pointerEvents = 'none');
+
+            const feedbackBox = document.getElementById('feedback-container');
+            const feedbackMsg = document.getElementById('feedback-message');
+            feedbackBox.classList.remove('hidden');
+
+            if (isCorrect) {
+                feedbackBox.className = "p-4 rounded-2xl border text-center font-bold space-y-3 bg-emerald-950/80 border-emerald-500/50 text-emerald-300";
+                feedbackMsg.innerHTML = `🎉 Correct! <b>${currentQ.correctPlayer}</b> said this!`;
+            } else {
+                feedbackBox.className = "p-4 rounded-2xl border text-center font-bold space-y-3 bg-rose-950/80 border-rose-500/50 text-rose-300";
+                feedbackMsg.innerHTML = `❌ Oops! It was actually <b>${currentQ.correctPlayer}</b>!`;
+            }
+
+            document.getElementById('live-score-val').innerText = score;
+            const acc = Math.round((score / (currentQuestionIndex + 1)) * 100);
+            document.getElementById('live-accuracy-val').innerText = `${acc}%`;
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizQueue.length) {
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showDashboardScreen() {
+            document.getElementById('landing-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('dashboard-screen').classList.remove('hidden');
+
+            const totalAnswered = userAnswers.length;
+            const overallAcc = totalAnswered > 0 ? Math.round((score / totalAnswered) * 100) : 0;
+
+            document.getElementById('dash-score-val').innerText = `${score} / ${totalAnswered}`;
+            document.getElementById('dash-accuracy-val').innerText = `${overallAcc}%`;
+            document.getElementById('dash-answered-val').innerText = `${totalAnswered} / ${quizQueue.length || 10}`;
+
+            const playerCardsContainer = document.getElementById('player-accuracy-cards');
+            playerCardsContainer.innerHTML = '';
+
+            gameData.players.forEach((player) => {
+                const totalForPlayer = userAnswers.filter(a => a.correctPlayer === player).length;
+                const correctForPlayer = userAnswers.filter(a => a.correctPlayer === player && a.isCorrect).length;
+                const pct = totalForPlayer > 0 ? Math.round((correctForPlayer / totalForPlayer) * 100) : 0;
+
+                const card = document.createElement('div');
+                card.className = "bg-amber-950/40 p-3 rounded-xl border border-amber-500/20 space-y-1.5";
+                card.innerHTML = `
+                    <div class="flex justify-between text-xs font-bold text-amber-200">
+                        <span>${player}</span>
+                        <span>${correctForPlayer} / ${totalForPlayer} (${pct}%)</span>
+                    </div>
+                    <div class="w-full bg-amber-950 rounded-full h-2 overflow-hidden border border-amber-500/20">
+                        <div class="bg-amber-400 h-2 rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+                    </div>
+                `;
+                playerCardsContainer.appendChild(card);
+            });
+
+            const logContainer = document.getElementById('dash-question-log');
+            if (totalAnswered === 0) {
+                logContainer.innerHTML = '<p class="text-xs text-amber-200/50 italic text-center py-4">No questions answered yet. Start playing!</p>';
+            } else {
+                logContainer.innerHTML = '';
+                userAnswers.forEach((ans, idx) => {
+                    const item = document.createElement('div');
+                    item.className = `p-3 rounded-xl border text-xs ${ans.isCorrect ? 'bg-emerald-950/40 border-emerald-500/30' : 'bg-rose-950/40 border-rose-500/30'}`;
+                    item.innerHTML = `
+                        <div class="font-bold text-amber-200">Q${idx + 1}: ${ans.question}</div>
+                        <div class="italic text-amber-100/80 my-1">"${ans.quote}"</div>
+                        <div class="text-xs ${ans.isCorrect ? 'text-emerald-400' : 'text-rose-400'} font-semibold">
+                            ${ans.isCorrect ? '✓ Correct' : `✗ Guessed ${ans.selectedPlayer}`} (Actual: ${ans.correctPlayer})
+                        </div>
+                    `;
+                    logContainer.appendChild(item);
+                });
+            }
+        }
+
+        function resumeGameOrLanding() {
+            document.getElementById('dashboard-screen').classList.add('hidden');
+            if (quizQueue.length > 0 && currentQuestionIndex < quizQueue.length) {
+                document.getElementById('game-screen').classList.remove('hidden');
+            } else {
+                document.getElementById('landing-screen').classList.remove('hidden');
+            }
+        }
+
+        function showResults() {
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('dashboard-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+
+            document.getElementById('final-score').innerText = `${score} / ${quizQueue.length}`;
+            const reviewLog = document.getElementById('review-log');
+            reviewLog.innerHTML = '';
+
+            userAnswers.forEach((ans, idx) => {
+                const item = document.createElement('div');
+                item.className = `p-3 rounded-xl border text-xs sm:text-sm ${ans.isCorrect ? 'bg-emerald-950/40 border-emerald-500/30' : 'bg-rose-950/40 border-rose-500/30'}`;
+                item.innerHTML = `
+                    <div class="font-bold text-amber-200">Q${idx + 1}: ${ans.question}</div>
+                    <div class="italic text-amber-100/80 my-1">"${ans.quote}"</div>
+                    <div class="text-xs ${ans.isCorrect ? 'text-emerald-400' : 'text-rose-400'} font-semibold">
+                        ${ans.isCorrect ? '✓ Correct!' : `✗ You picked ${ans.selectedPlayer}`} (Actual: ${ans.correctPlayer})
+                    </div>
+                `;
+                reviewLog.appendChild(item);
+            });
+        }
+    </script>
+</body>
+</html>
